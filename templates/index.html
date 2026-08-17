@@ -1,0 +1,2104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>WindFlow Scout</title>
+
+
+    <!-- Leaflet -->
+
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+
+        body {
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: #031c14;
+
+            color: white;
+
+        }
+
+
+        /* ===============================
+           NAVBAR
+        =============================== */
+
+        nav {
+
+            height: 65px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding: 0 7%;
+
+            background: #03150f;
+
+            border-bottom:
+                1px solid #1b4b3b;
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 9999;
+
+        }
+
+
+        .logo {
+
+            color: #27e58a;
+
+            font-size: 21px;
+
+            font-weight: bold;
+
+        }
+
+
+        nav ul {
+
+            list-style: none;
+
+            display: flex;
+
+            gap: 30px;
+
+        }
+
+
+        nav a {
+
+            color: white;
+
+            text-decoration: none;
+
+            font-size: 14px;
+
+        }
+
+
+        nav a:hover {
+
+            color: #27e58a;
+
+        }
+
+
+        /* ===============================
+           HERO
+        =============================== */
+
+        .hero {
+
+            min-height: 520px;
+
+            padding:
+                100px 8%;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: center;
+
+        }
+
+
+        .tag {
+
+            color: #27e58a;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+            letter-spacing: 2px;
+
+            margin-bottom: 20px;
+
+        }
+
+
+        .hero h1 {
+
+            font-size:
+                clamp(42px, 7vw, 75px);
+
+            max-width: 850px;
+
+            line-height: 1.05;
+
+            margin-bottom: 25px;
+
+        }
+
+
+        .hero h1 span {
+
+            color: #27e58a;
+
+        }
+
+
+        .hero p {
+
+            max-width: 750px;
+
+            color: #b7c9c2;
+
+            font-size: 18px;
+
+            line-height: 1.7;
+
+            margin-bottom: 30px;
+
+        }
+
+
+        .btn {
+
+            display: inline-block;
+
+            padding:
+                14px 25px;
+
+            border-radius: 8px;
+
+            background: #27e58a;
+
+            color: #031c14;
+
+            font-weight: bold;
+
+            text-decoration: none;
+
+        }
+
+
+        /* ===============================
+           SECTIONS
+        =============================== */
+
+        section {
+
+            padding:
+                80px 7%;
+
+        }
+
+
+        .section-label {
+
+            color: #27e58a;
+
+            font-size: 13px;
+
+            font-weight: bold;
+
+            letter-spacing: 2px;
+
+            margin-bottom: 15px;
+
+        }
+
+
+        section h2 {
+
+            font-size: 38px;
+
+            margin-bottom: 20px;
+
+        }
+
+
+        .section-text {
+
+            color: #b7c9c2;
+
+            max-width: 850px;
+
+            line-height: 1.7;
+
+        }
+
+
+        /* ===============================
+           CARDS
+        =============================== */
+
+        .cards {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(220px, 1fr)
+                );
+
+            gap: 20px;
+
+            margin-top: 40px;
+
+        }
+
+
+        .card {
+
+            background: #08291e;
+
+            border:
+                1px solid #174938;
+
+            border-radius: 14px;
+
+            padding: 30px;
+
+        }
+
+
+        .card-icon {
+
+            font-size: 35px;
+
+            margin-bottom: 15px;
+
+        }
+
+
+        .card h3 {
+
+            margin-bottom: 10px;
+
+        }
+
+
+        .card p {
+
+            color: #a8bbb4;
+
+            line-height: 1.6;
+
+        }
+
+
+        /* ===============================
+           MAP
+        =============================== */
+
+        .map-container {
+
+            width: 100%;
+
+            height: 600px;
+
+            margin-top: 35px;
+
+            border:
+                2px solid #27e58a;
+
+            border-radius: 15px;
+
+            overflow: hidden;
+
+        }
+
+
+        #map {
+
+            width: 100%;
+
+            height: 100%;
+
+        }
+
+
+        /* ===============================
+           LEGEND
+        =============================== */
+
+        .legend {
+
+            margin-top: 15px;
+
+            padding: 20px;
+
+            background: #08291e;
+
+            border-radius: 10px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 25px;
+
+            flex-wrap: wrap;
+
+        }
+
+
+        .legend-item {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+        }
+
+
+        .legend-dot {
+
+            width: 15px;
+
+            height: 15px;
+
+            border-radius: 50%;
+
+        }
+
+
+        .red {
+            background: #ef4444;
+        }
+
+
+        .yellow {
+            background: #facc15;
+        }
+
+
+        .green {
+            background: #22c55e;
+        }
+
+
+        #map-status {
+
+            text-align: center;
+
+            margin-top: 18px;
+
+            color: #27e58a;
+
+        }
+
+
+        /* ===============================
+           POPUP
+        =============================== */
+
+        .leaflet-popup-content-wrapper {
+
+            border-radius: 12px;
+
+        }
+
+
+        .leaflet-popup-content {
+
+            min-width: 290px;
+
+            margin: 15px;
+
+            color: #111;
+
+        }
+
+
+        .popup-title {
+
+            font-size: 18px;
+
+            font-weight: bold;
+
+            margin-bottom: 10px;
+
+        }
+
+
+        .location-box {
+
+            background: #eafaf3;
+
+            border-left:
+                4px solid #27ae78;
+
+            padding: 12px;
+
+            border-radius: 7px;
+
+            margin-bottom: 12px;
+
+        }
+
+
+        .location-name {
+
+            font-size: 17px;
+
+            font-weight: bold;
+
+            color: #075c3d;
+
+        }
+
+
+        .country-name {
+
+            color: #555;
+
+            font-size: 13px;
+
+            margin-top: 4px;
+
+        }
+
+
+        .popup-row {
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            gap: 15px;
+
+            padding: 7px 0;
+
+            border-bottom:
+                1px solid #eeeeee;
+
+            font-size: 13px;
+
+        }
+
+
+        .popup-row strong {
+
+            color: #222;
+
+        }
+
+
+        .popup-value {
+
+            text-align: right;
+
+        }
+
+
+        .coordinates {
+
+            color: #666;
+
+            font-size: 11px;
+
+        }
+
+
+        .popup-result {
+
+            margin-top: 12px;
+
+            padding: 11px;
+
+            border-radius: 8px;
+
+            color: white;
+
+            text-align: center;
+
+            font-weight: bold;
+
+        }
+
+
+        .popup-low {
+
+            background: #ef4444;
+
+        }
+
+
+        .popup-medium {
+
+            background: #eab308;
+
+        }
+
+
+        .popup-high {
+
+            background: #16a34a;
+
+        }
+
+
+        .finding-location {
+
+            padding: 8px;
+
+            color: #666;
+
+            font-size: 12px;
+
+            text-align: center;
+
+        }
+
+
+        /* ===============================
+           ANALYSIS
+        =============================== */
+
+        .analysis-box {
+
+            max-width: 700px;
+
+            margin:
+                35px auto 0;
+
+            padding: 30px;
+
+            background: #08291e;
+
+            border:
+                1px solid #174938;
+
+            border-radius: 15px;
+
+        }
+
+
+        .input-group {
+
+            margin-bottom: 18px;
+
+        }
+
+
+        .input-group label {
+
+            display: block;
+
+            margin-bottom: 7px;
+
+        }
+
+
+        .input-group input,
+        .input-group select {
+
+            width: 100%;
+
+            padding: 12px;
+
+            border:
+                1px solid #376456;
+
+            border-radius: 7px;
+
+            background: #031c14;
+
+            color: white;
+
+        }
+
+
+        .predict-btn {
+
+            width: 100%;
+
+            padding: 14px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: #27e58a;
+
+            color: #031c14;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+        }
+
+
+        #prediction-result {
+
+            display: none;
+
+            margin-top: 20px;
+
+            padding: 20px;
+
+            background: #031c14;
+
+            border-radius: 10px;
+
+            text-align: center;
+
+        }
+
+
+        /* ===============================
+           FOOTER
+        =============================== */
+
+        footer {
+
+            padding: 30px;
+
+            text-align: center;
+
+            color: #7f9990;
+
+            border-top:
+                1px solid #174938;
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ======================================================
+     NAVBAR
+====================================================== -->
+
+<nav>
+
+    <div class="logo">
+        🌬️ WindFlow Scout
+    </div>
+
+
+    <ul>
+
+        <li>
+            <a href="#home">
+                Home
+            </a>
+        </li>
+
+        <li>
+            <a href="#about">
+                About
+            </a>
+        </li>
+
+        <li>
+            <a href="#map-section">
+                Explore Map
+            </a>
+        </li>
+
+        <li>
+            <a href="#analysis">
+                Analysis
+            </a>
+        </li>
+
+    </ul>
+
+</nav>
+
+
+<!-- ======================================================
+     HOME
+====================================================== -->
+
+<section
+    id="home"
+    class="hero"
+>
+
+    <div class="tag">
+        AI-POWERED WIND ENERGY SITE ASSESSMENT
+    </div>
+
+
+    <h1>
+
+        Find the best
+        <span>locations</span>
+        for wind energy.
+
+    </h1>
+
+
+    <p>
+
+        WindFlow Scout combines global
+        environmental data and machine
+        learning to identify promising
+        locations for wind energy development.
+
+    </p>
+
+
+    <a
+        href="#map-section"
+        class="btn"
+    >
+
+        Explore Global Map
+
+    </a>
+
+</section>
+
+
+<!-- ======================================================
+     ABOUT
+====================================================== -->
+
+<section id="about">
+
+    <div class="section-label">
+        ABOUT THE PROJECT
+    </div>
+
+
+    <h2>
+        Intelligent wind site assessment
+    </h2>
+
+
+    <p class="section-text">
+
+        WindFlow Scout analyzes wind speed,
+        wind variability, elevation, slope,
+        and land availability using a Random
+        Forest machine learning model.
+
+    </p>
+
+
+    <div class="cards">
+
+
+        <div class="card">
+
+            <div class="card-icon">
+                🌬️
+            </div>
+
+            <h3>
+                Wind Analysis
+            </h3>
+
+            <p>
+                Analyze wind speed and
+                variability for potential
+                wind energy locations.
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-icon">
+                🤖
+            </div>
+
+            <h3>
+                AI Prediction
+            </h3>
+
+            <p>
+                Random Forest evaluates
+                environmental conditions
+                to estimate site suitability.
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-icon">
+                🌍
+            </div>
+
+            <h3>
+                Global Coverage
+            </h3>
+
+            <p>
+                Explore wind suitability
+                across locations around
+                the world.
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-icon">
+                📍
+            </div>
+
+            <h3>
+                Place Identification
+            </h3>
+
+            <p>
+                Click a map location to
+                identify the nearby city,
+                state and country.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ======================================================
+     MAP
+====================================================== -->
+
+<section id="map-section">
+
+    <div class="section-label">
+        EXPLORE GLOBAL LOCATIONS
+    </div>
+
+
+    <h2>
+        Global Wind Energy Suitability Map
+    </h2>
+
+
+    <p class="section-text">
+
+        Click any colored point to see
+        the real-world place associated
+        with that location and its
+        wind-energy characteristics.
+
+    </p>
+
+
+    <div class="map-container">
+
+        <div id="map"></div>
+
+    </div>
+
+
+    <div class="legend">
+
+        <strong>
+            Suitability:
+        </strong>
+
+
+        <div class="legend-item">
+
+            <span
+                class="legend-dot red">
+            </span>
+
+            Low
+
+        </div>
+
+
+        <div class="legend-item">
+
+            <span
+                class="legend-dot yellow">
+            </span>
+
+            Medium
+
+        </div>
+
+
+        <div class="legend-item">
+
+            <span
+                class="legend-dot green">
+            </span>
+
+            High
+
+        </div>
+
+    </div>
+
+
+    <div id="map-status">
+
+        ⏳ Loading global wind locations...
+
+    </div>
+
+</section>
+
+
+<!-- ======================================================
+     ANALYSIS
+====================================================== -->
+
+<section id="analysis">
+
+    <div class="section-label">
+        AI ANALYSIS
+    </div>
+
+
+    <h2>
+        Predict Wind Site Suitability
+    </h2>
+
+
+    <p class="section-text">
+
+        Enter environmental conditions
+        and let the Random Forest model
+        estimate the suitability.
+
+    </p>
+
+
+    <div class="analysis-box">
+
+
+        <div class="input-group">
+
+            <label>
+                Mean Wind Speed (m/s)
+            </label>
+
+            <input
+                id="wind-speed"
+                type="number"
+                step="0.01"
+                placeholder="Example: 6.5"
+            >
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label>
+                Wind Variability
+            </label>
+
+            <input
+                id="wind-variability"
+                type="number"
+                step="0.01"
+                placeholder="Example: 1.5"
+            >
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label>
+                Elevation (m)
+            </label>
+
+            <input
+                id="elevation"
+                type="number"
+                step="0.01"
+                placeholder="Example: 150"
+            >
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label>
+                Slope (degrees)
+            </label>
+
+            <input
+                id="slope"
+                type="number"
+                step="0.01"
+                placeholder="Example: 5"
+            >
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label>
+                Open Land
+            </label>
+
+            <select id="open-land">
+
+                <option value="1">
+                    Yes
+                </option>
+
+                <option value="0">
+                    No
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <button
+            class="predict-btn"
+            onclick="runPrediction()"
+        >
+
+            🤖 Run AI Prediction
+
+        </button>
+
+
+        <div id="prediction-result">
+
+            <h3 id="prediction-title">
+                AI Prediction
+            </h3>
+
+            <div id="prediction-text"></div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<footer>
+
+    🌬️ WindFlow Scout
+
+    <br>
+
+    AI-Powered Wind Energy Site Assessment
+
+</footer>
+
+
+<!-- ======================================================
+     LEAFLET
+====================================================== -->
+
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
+
+
+<script>
+
+
+// ======================================================
+// INITIALIZE MAP
+// ======================================================
+
+const map = L.map(
+    "map",
+    {
+        worldCopyJump: true,
+        preferCanvas: true
+    }
+).setView(
+    [20, 0],
+    2
+);
+
+
+// ======================================================
+// MAP TILES
+// ======================================================
+
+L.tileLayer(
+
+    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+
+    {
+
+        maxZoom: 18,
+
+        attribution:
+            '&copy; OpenStreetMap contributors'
+
+    }
+
+).addTo(map);
+
+
+// ======================================================
+// CANVAS RENDERER
+// ======================================================
+
+const canvasRenderer =
+    L.canvas({
+        padding: 0.5
+    });
+
+
+// ======================================================
+// COLOR
+// ======================================================
+
+function getColor(
+    suitability
+) {
+
+    const value =
+        Number(suitability);
+
+
+    if (value === 0) {
+
+        return "#ef4444";
+
+    }
+
+
+    if (value === 1) {
+
+        return "#facc15";
+
+    }
+
+
+    if (value === 2) {
+
+        return "#22c55e";
+
+    }
+
+
+    return "#808080";
+
+}
+
+
+// ======================================================
+// CLASS NAME
+// ======================================================
+
+function getClassName(
+    suitability
+) {
+
+    const value =
+        Number(suitability);
+
+
+    if (value === 0) {
+
+        return "Low Suitability";
+
+    }
+
+
+    if (value === 1) {
+
+        return "Medium Suitability";
+
+    }
+
+
+    if (value === 2) {
+
+        return "High Suitability";
+
+    }
+
+
+    return "Unknown";
+
+}
+
+
+// ======================================================
+// REVERSE GEOCODING
+// ======================================================
+
+async function findPlace(
+    lat,
+    lon
+) {
+
+    try {
+
+        const response =
+            await fetch(
+                `/api/reverse-geocode?lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}`
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Location lookup failed"
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        if (!data.success) {
+
+            throw new Error(
+                data.message ||
+                "Location not found"
+            );
+
+        }
+
+
+        return data;
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Place lookup error:",
+            error
+        );
+
+
+        return {
+
+            success: false,
+
+            location_name:
+                "Location name unavailable"
+
+        };
+
+    }
+
+}
+
+
+// ======================================================
+// CREATE POPUP
+// ======================================================
+
+function createPopup(
+    point
+) {
+
+    const prediction =
+        Number(point.suitable);
+
+
+    let popupClass =
+        "popup-low";
+
+
+    if (prediction === 1) {
+
+        popupClass =
+            "popup-medium";
+
+    }
+
+
+    if (prediction === 2) {
+
+        popupClass =
+            "popup-high";
+
+    }
+
+
+    const lat =
+        Number(
+            point.latitude
+        );
+
+
+    const lon =
+        Number(
+            point.longitude
+        );
+
+
+    return `
+
+        <div class="popup-title">
+
+            🌬️ WindFlow Scout
+
+        </div>
+
+
+        <div class="location-box">
+
+            <div
+                id="place-${lat}-${lon}"
+                class="location-name"
+            >
+
+                📍 Finding place...
+
+            </div>
+
+
+            <div
+                id="country-${lat}-${lon}"
+                class="country-name"
+            >
+
+                Please wait...
+
+            </div>
+
+        </div>
+
+
+        <div class="popup-row">
+
+            <strong>
+                Latitude
+            </strong>
+
+            <span class="popup-value">
+
+                ${lat.toFixed(5)}°
+
+            </span>
+
+        </div>
+
+
+        <div class="popup-row">
+
+            <strong>
+                Longitude
+            </strong>
+
+            <span class="popup-value">
+
+                ${lon.toFixed(5)}°
+
+            </span>
+
+        </div>
+
+
+        <div class="popup-row">
+
+            <strong>
+                Wind Speed
+            </strong>
+
+            <span class="popup-value">
+
+                ${Number(
+                    point.mean_wind_speed
+                ).toFixed(2)}
+
+                m/s
+
+            </span>
+
+        </div>
+
+
+        <div class="popup-row">
+
+            <strong>
+                Wind Variability
+            </strong>
+
+            <span class="popup-value">
+
+                ${Number(
+                    point.wind_variability
+                ).toFixed(2)}
+
+            </span>
+
+        </div>
+
+
+        <div class="popup-row">
+
+            <strong>
+                Elevation
+            </strong>
+
+            <span class="popup-value">
+
+                ${Number(
+                    point.elevation
+                ).toFixed(2)}
+
+                m
+
+            </span>
+
+        </div>
+
+
+        <div class="popup-row">
+
+            <strong>
+                Slope
+            </strong>
+
+            <span class="popup-value">
+
+                ${Number(
+                    point.slope
+                ).toFixed(2)}
+
+                °
+
+            </span>
+
+        </div>
+
+
+        <div class="popup-row">
+
+            <strong>
+                Open Land
+            </strong>
+
+            <span class="popup-value">
+
+                ${
+                    Number(point.open_land) === 1
+                    ? "Yes"
+                    : "No"
+                }
+
+            </span>
+
+        </div>
+
+
+        <div
+            class="popup-result ${popupClass}"
+        >
+
+            ${getClassName(
+                point.suitable
+            )}
+
+            <br>
+
+            Confidence:
+            ${Number(
+                point.confidence
+            ).toFixed(2)}%
+
+        </div>
+
+    `;
+
+}
+
+
+// ======================================================
+// LOAD PLACE NAME AFTER POPUP OPENS
+// ======================================================
+
+async function updatePlaceName(
+    point
+) {
+
+    const lat =
+        Number(
+            point.latitude
+        );
+
+    const lon =
+        Number(
+            point.longitude
+        );
+
+
+    const placeId =
+        `place-${lat}-${lon}`;
+
+
+    const countryId =
+        `country-${lat}-${lon}`;
+
+
+    const placeElement =
+        document.getElementById(
+            placeId
+        );
+
+
+    const countryElement =
+        document.getElementById(
+            countryId
+        );
+
+
+    if (!placeElement) {
+
+        return;
+
+    }
+
+
+    const location =
+        await findPlace(
+            lat,
+            lon
+        );
+
+
+    if (
+        !location.success
+    ) {
+
+        placeElement.innerHTML =
+            "📍 Location name unavailable";
+
+
+        countryElement.innerHTML =
+            "Coordinates available above";
+
+
+        return;
+
+    }
+
+
+    // ==================================================
+    // DISPLAY PLACE
+    // ==================================================
+
+    placeElement.innerHTML =
+        "📍 " +
+        (
+            location.location_name ||
+            "Unknown location"
+        );
+
+
+    countryElement.innerHTML =
+
+        location.country
+        ? "🌍 " + location.country
+        : "";
+
+}
+
+
+// ======================================================
+// LOAD MAP DATA
+// ======================================================
+
+async function loadMapData() {
+
+    const status =
+        document.getElementById(
+            "map-status"
+        );
+
+
+    try {
+
+        status.innerHTML =
+            "⏳ Loading global wind locations...";
+
+
+        const response =
+            await fetch(
+                "/api/map-data"
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Server returned error: "
+                + response.status
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        if (!data.success) {
+
+            throw new Error(
+                data.message ||
+                "Unable to load map data."
+            );
+
+        }
+
+
+        if (
+            !data.points ||
+            data.points.length === 0
+        ) {
+
+            throw new Error(
+                "No locations were returned."
+            );
+
+        }
+
+
+        // ==================================================
+        // ADD POINTS
+        // ==================================================
+
+        data.points.forEach(
+            function(point) {
+
+                const lat =
+                    Number(
+                        point.latitude
+                    );
+
+
+                const lon =
+                    Number(
+                        point.longitude
+                    );
+
+
+                if (
+                    !Number.isFinite(lat) ||
+                    !Number.isFinite(lon)
+                ) {
+
+                    return;
+
+                }
+
+
+                const color =
+                    getColor(
+                        point.suitable
+                    );
+
+
+                const marker =
+                    L.circleMarker(
+
+                        [lat, lon],
+
+                        {
+
+                            renderer:
+                                canvasRenderer,
+
+                            radius: 4,
+
+                            fillColor:
+                                color,
+
+                            color:
+                                color,
+
+                            weight: 1,
+
+                            opacity: 0.9,
+
+                            fillOpacity: 0.75
+
+                        }
+
+                    );
+
+
+                marker.bindPopup(
+                    createPopup(
+                        point
+                    )
+                );
+
+
+                marker.on(
+                    "popupopen",
+                    function() {
+
+                        updatePlaceName(
+                            point
+                        );
+
+                    }
+                );
+
+
+                marker.addTo(
+                    map
+                );
+
+            }
+        );
+
+
+        status.innerHTML =
+
+            "✓ " +
+
+            data.count.toLocaleString() +
+
+            " global locations loaded. " +
+
+            "Click any colored point to identify the place and view details.";
+
+    }
+
+    catch (error) {
+
+        console.error(
+            error
+        );
+
+
+        status.innerHTML =
+
+            "❌ Error loading locations.<br>" +
+
+            error.message;
+
+    }
+
+}
+
+
+// ======================================================
+// START MAP
+// ======================================================
+
+loadMapData();
+
+
+// ======================================================
+// AI PREDICTION
+// ======================================================
+
+async function runPrediction() {
+
+    const result =
+        document.getElementById(
+            "prediction-result"
+        );
+
+
+    const title =
+        document.getElementById(
+            "prediction-title"
+        );
+
+
+    const text =
+        document.getElementById(
+            "prediction-text"
+        );
+
+
+    const windSpeed =
+        document.getElementById(
+            "wind-speed"
+        ).value;
+
+
+    const variability =
+        document.getElementById(
+            "wind-variability"
+        ).value;
+
+
+    const elevation =
+        document.getElementById(
+            "elevation"
+        ).value;
+
+
+    const slope =
+        document.getElementById(
+            "slope"
+        ).value;
+
+
+    const openLand =
+        document.getElementById(
+            "open-land"
+        ).value;
+
+
+    if (
+
+        windSpeed === "" ||
+
+        variability === "" ||
+
+        elevation === "" ||
+
+        slope === ""
+
+    ) {
+
+        result.style.display =
+            "block";
+
+
+        title.innerHTML =
+            "⚠️ Missing Information";
+
+
+        text.innerHTML =
+            "Please enter all values.";
+
+
+        return;
+
+    }
+
+
+    result.style.display =
+        "block";
+
+
+    title.innerHTML =
+        "🤖 Running AI Prediction...";
+
+
+    text.innerHTML =
+        "Please wait...";
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/predict",
+                {
+
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body: JSON.stringify({
+
+                        mean_wind_speed:
+                            Number(
+                                windSpeed
+                            ),
+
+                        wind_variability:
+                            Number(
+                                variability
+                            ),
+
+                        elevation:
+                            Number(
+                                elevation
+                            ),
+
+                        slope:
+                            Number(
+                                slope
+                            ),
+
+                        open_land:
+                            Number(
+                                openLand
+                            )
+
+                    })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.message ||
+                "Prediction failed."
+            );
+
+        }
+
+
+        let color =
+            "#ef4444";
+
+
+        if (
+            Number(
+                data.prediction
+            ) === 1
+        ) {
+
+            color =
+                "#facc15";
+
+        }
+
+
+        if (
+            Number(
+                data.prediction
+            ) === 2
+        ) {
+
+            color =
+                "#22c55e";
+
+        }
+
+
+        title.innerHTML =
+            "🤖 AI Prediction";
+
+
+        text.innerHTML = `
+
+            <div
+                style="
+                    color:${color};
+                    font-size:24px;
+                    font-weight:bold;
+                    margin-bottom:10px;
+                "
+            >
+
+                ${data.class_name}
+
+            </div>
+
+
+            <div>
+
+                Confidence:
+
+                <strong>
+                    ${data.confidence}%
+                </strong>
+
+            </div>
+
+
+            <br>
+
+
+            <div>
+
+                🔴 Low:
+                ${data.probabilities.low}%
+
+                &nbsp; | &nbsp;
+
+                🟡 Medium:
+                ${data.probabilities.medium}%
+
+                &nbsp; | &nbsp;
+
+                🟢 High:
+                ${data.probabilities.high}%
+
+            </div>
+
+        `;
+
+    }
+
+    catch (error) {
+
+        console.error(
+            error
+        );
+
+
+        title.innerHTML =
+            "❌ Prediction Error";
+
+
+        text.innerHTML =
+            error.message;
+
+    }
+
+}
+
+</script>
+
+</body>
+
+</html>
